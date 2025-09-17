@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toy Galaxy - Order Toys Online</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ffe259, #ffa751);
+      color: #333;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(6px);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.8rem; color: #ff6f61;
+      transition: transform 0.3s ease;
+    }
+
+    header h1:hover { transform: scale(1.1) rotate(-3deg); }
+
+    nav a {
+      margin: 0 1rem; text-decoration: none; color: #444; font-weight: 500; position: relative;
+    }
+
+    nav a::after {
+      content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px; background: #ff6f61; transition: width 0.3s ease;
+    }
+
+    nav a:hover::after { width: 100%; }
+
+    section {
+      min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 6rem 2rem 2rem; transition: all 0.8s ease;
+    }
+
+    section h2 { font-family: 'Fredoka One', cursive; font-size: 3rem; color: #ff6f61; margin-bottom: 1rem; }
+    section p { max-width: 600px; font-size: 1.2rem; }
+
+    .btn {
+      margin-top: 1.5rem; padding: 0.8rem 1.6rem; border: none; border-radius: 30px;
+      background: #ff6f61; color: #fff; font-size: 1rem; cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .btn:hover { transform: scale(1.1); background: #ff3b2e; }
+
+    .toy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .toy-card { background: #fff; border-radius: 20px; padding: 1rem; box-shadow: 0 6px 12px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+    .toy-card:hover { transform: translateY(-10px) rotate(-1deg); }
+    .toy-card img { max-width: 100%; border-radius: 15px; }
+
+    .cart { margin-top: 2rem; background: #fff; border-radius: 20px; padding: 1.5rem; max-width: 700px; width: 100%; box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+    .cart h3 { font-family: 'Fredoka One', cursive; margin-bottom: 1rem; color: #ff6f61; }
+    .cart ul { list-style: none; }
+    .cart li { display: flex; justify-content: space-between; align-items: center; margin: 0.5rem 0; font-weight: 500; }
+    .quantity-input { width: 50px; padding: 0.2rem; text-align: center; }
+    .remove-btn { background: none; border: none; color: #ff3b2e; font-size: 0.9rem; cursor: pointer; margin-left: 0.5rem; }
+
+    footer { background: #fff; padding: 1rem; text-align: center; font-size: 0.9rem; color: #666; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); }
+
+    /* Bot */
+    .bot { transition: 0.3s;position: fixed; bottom: 20px; right: 20px; width: 100px; height: 100px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 12px rgba(0,0,0,0.2); z-index: 2000; animation: wave 4s infinite ease-in-out; cursor: pointer; }
+
+    @keyframes wave { 0%,100%{transform:rotate(0deg);} 25%{transform:rotate(5deg);} 75%{transform:rotate(-5deg);} }
+
+    .eyes { display: flex;  gap: 20px; }
+    .eye { width: 30px; height: 30px; background: #eee; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
+    .pupil { width: 12px; height: 12px; background: #333; border-radius: 50%; position: relative; transition: transform 0.1s; }
+    .eyelid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; border-radius: 50%; transform: translateY(-100%); animation: blink 6s infinite; }
+
+    @keyframes blink { 0%,90%,100%{transform:translateY(-100%);} 92%,98%{transform:translateY(0);} }
+
+    /* Chat bubble */
+    .chat-bubble { position: fixed; bottom: 140px; right: 40px; background: #fff; padding: 1rem; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); max-width: 250px; font-size: 0.95rem; display: none; transition: 0.3s;}
+    .chat-bubble::after {  content: ''; position: absolute; bottom: -10px; right: 30px; border-width: 10px; border-style: solid; border-color: #fff transparent transparent transparent; transition: 0.3s;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Toy Galaxy</h1>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#shop">Shop</a>
+      <a href="#cart">Cart</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section id="home">
+    <h2>Welcome to Toy Galaxy</h2>
+    <p>Your one-stop online shop for fun, creative, and cool toys for all ages.</p>
+    <button class="btn" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Start Shopping</button>
+  </section>
+
+  <section id="shop">
+    <h2>Shop Toys</h2>
+    <p>Explore our latest collection of toys that bring joy and imagination.</p>
+    <div class="toy-grid">
+      <div class="toy-card">
+        <img src="https://i.ibb.co/bmFt5dq/toy1.jpg" alt="Toy Car">
+        <h3>Speedy Car</h3>
+        <p>$15</p>
+        <button class="btn" onclick="addToCart('Speedy Car',15)">Add to Cart</button>
+      </div>
+      <div class="toy-card">
+        <img src="https://i.ibb.co/ZYh31Gv/toy2.jpg" alt="Teddy Bear">
+        <h3>Cuddly Bear</h3>
+        <p>$20</p>
+        <button class="btn" onclick="addToCart('Cuddly Bear',20)">Add to Cart</button>
+      </div>
+      <div class="toy-card">
+        <img src="https://i.ibb.co/R4Y9VYk/toy3.jpg" alt="Lego Set">
+        <h3>Building Blocks</h3>
+        <p>$35</p>
+        <button class="btn" onclick="addToCart('Building Blocks',35)">Add to Cart</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="cart">
+    <h2>Your Cart</h2>
+    <div class="cart">
+      <h3>Items</h3>
+      <ul id="cart-items"></ul>
+      <p><strong>Total: $<span id="cart-total">0</span></strong></p>
+      <button class="btn">Checkout</button>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p>At Toy Galaxy, we believe toys are more than playthings—they’re sparks of imagination, tools of learning, and timeless companions.</p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>Have questions or custom requests? Reach out to us anytime.</p>
+    <button class="btn">Email Us</button>
+  </section>
+
+  <footer>
+    <p>© 2025 Toy Galaxy. All Rights Reserved.</p>
+  </footer>
+
+  <!-- Bot -->
+  <div class="bot" onclick="toggleChat()">
+    <div class="eyes">
+      <div class="eye"><div class="pupil"></div><div class="eyelid"></div></div>
+      <div class="eye"><div class="pupil"></div><div class="eyelid"></div></div>
+    </div>
+  </div>
+  <div class="chat-bubble" id="chat-bubble">Hi there! 👋 Need help with your toy order?</div>
+
+  <script>
+    let cart = [];
+
+    function addToCart(name, price) {
+      let existing = cart.find(item => item.name === name);
+      if (existing) { existing.quantity++; }
+      else { cart.push({name, price, quantity: 1}); }
+      renderCart();
+    }
+
+    function updateQuantity(index, quantity) {
+      if (quantity <= 0) { removeFromCart(index); }
+      else { cart[index].quantity = parseInt(quantity); renderCart(); }
+    }
+
+    function removeFromCart(index) { cart.splice(index, 1); renderCart(); }
+
+    function renderCart() {
+      const cartItems = document.getElementById('cart-items');
+      const cartTotal = document.getElementById('cart-total');
+      cartItems.innerHTML = '';
+      let total = 0;
+
+      cart.forEach((item, index) => {
+        total += item.price * item.quantity;
+        const li = document.createElement('li');
+        li.innerHTML = `${item.name} - $${item.price} x <input type="number" class="quantity-input" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)"> = $${item.price * item.quantity} <button class="remove-btn" onclick="removeFromCart(${index})">Remove</button>`;
+        cartItems.appendChild(li);
+      });
+
+      cartTotal.textContent = total;
+    }
+
+    // Bot eye tracking
+    const pupils = document.querySelectorAll('.pupil');
+    document.addEventListener('mousemove', (e) => {
+      pupils.forEach(pupil => {
+        const rect = pupil.getBoundingClientRect();
+        const eyeCenterX = rect.left + rect.width / 2;
+        const eyeCenterY = rect.top + rect.height / 2;
+        const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
+        const x = Math.cos(angle) * 6;
+        const y = Math.sin(angle) * 6;
+        pupil.style.transform = `translate(${x}px, ${y}px)`;
+      });
+    });
+
+    // Toggle chat bubble
+    function toggleChat() {
+      const bubble = document.getElementById('chat-bubble');
+      bubble.style.display = (bubble.style.display === 'block') ? 'none' : 'block';
+    }
+  </script>
+</body>
+</html>
